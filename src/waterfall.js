@@ -51,6 +51,8 @@
                 curPage: 1 // cur page
             },
 
+            cacheData: undefined, // cache data
+
             // callbacks
             callbacks: {
                 /*
@@ -158,8 +160,8 @@
             this._resetColumnsHeightArray(); 
             this.reLayout( callback );
             
-            if ( !path ) { 
-                this._debug('Invalid path');
+            if ( !path && !cacheData ) { 
+                this._debug('Invalid path or No cache data');
                 return;
             }
             
@@ -444,11 +446,18 @@
                 path = options.path,
                 dataType = options.dataType,
                 params = options.params,
+                cacheData = options.cacheData,
                 pageurl;
 
             if ( maxPage !== undefined && curPage > maxPage ){
                 options.state.isBeyondMaxPage = true;
                 options.callbacks.loadingFinished(this.$loading, options.state.isBeyondMaxPage);
+                return;
+            }
+
+            // handle data in the page cache
+            if(cacheData) {
+                this._handleResponse(cacheData, callback);
                 return;
             }
             
