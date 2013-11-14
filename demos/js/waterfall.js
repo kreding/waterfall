@@ -1,6 +1,10 @@
-/*! waterfall - v0.1.6 - 2013-07-21
-* http://wlog.cn/waterfall/
-* Copyright (c) 2013 bingdian; Licensed MIT */
+/*!
+ * waterfall
+ * http://wlog.cn/waterfall/
+ *
+ * Copyright (c) 2013 bingdian
+ * Licensed under the MIT license.
+ */
 /*global Handlebars: false, console: false */
 ;(function( $, window, document, undefined ) {
     
@@ -46,6 +50,8 @@
                 isPause: false,
                 curPage: 1 // cur page
             },
+
+            cacheData: undefined, // cache data
 
             // callbacks
             callbacks: {
@@ -154,10 +160,10 @@
             this._resetColumnsHeightArray(); 
             this.reLayout( callback );
             
-            if ( !path ) { 
-                this._debug('Invalid path');
-                return;
-            }
+            // if ( !path ) { 
+            //     this._debug('Invalid path');
+            //     return;
+            // }
             
             // auto prefill
             if ( options.isAutoPrefill ) {
@@ -440,11 +446,18 @@
                 path = options.path,
                 dataType = options.dataType,
                 params = options.params,
+                cacheData = options.cacheData,
                 pageurl;
 
             if ( maxPage !== undefined && curPage > maxPage ){
                 options.state.isBeyondMaxPage = true;
                 options.callbacks.loadingFinished(this.$loading, options.state.isBeyondMaxPage);
+                return;
+            }
+
+            if(cacheData) {
+                cacheData.curPage = curPage;
+                this._handleResponse(cacheData, callback);
                 return;
             }
             
@@ -554,7 +567,7 @@
             
             this._requestData(function() {
                 var timer = setTimeout(function() {
-                    self._scroll();
+                    //self._scroll();
                 }, 100);
             });
         },
