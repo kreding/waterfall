@@ -160,10 +160,10 @@
             this._resetColumnsHeightArray(); 
             this.reLayout( callback );
             
-            if ( !path && !cacheData ) { 
-                this._debug('Invalid path or No cache data');
-                return;
-            }
+            // if ( !path ) { 
+            //     this._debug('Invalid path');
+            //     return;
+            // }
             
             // auto prefill
             if ( options.isAutoPrefill ) {
@@ -455,8 +455,8 @@
                 return;
             }
 
-            // handle data in the page cache
             if(cacheData) {
+                cacheData.curPage = curPage;
                 this._handleResponse(cacheData, callback);
                 return;
             }
@@ -567,7 +567,7 @@
             
             this._requestData(function() {
                 var timer = setTimeout(function() {
-                    self._scroll();
+                    //self._scroll();
                 }, 100);
             });
         },
